@@ -19,6 +19,45 @@ namespace Hello
 
             Class1.CreateSpreadSheetFromTemplate(@"tf10378474_win32.xltx",@"tf10378474_win32.xlsx");
 
+            var excel_output = Environment.GetEnvironmentVariable("EXCEL_OUTPUT");
+            
+            var outputpath = Path.Combine(excel_output,@"tf10378474_win32.xlsx");
+
+            var cellReference = "J4";
+
+            using (var spreadsheetDoc = SpreadsheetDocument.Open(outputpath, true))
+            {
+                // Change from template type to workbook type
+                Sheets sheets = spreadsheetDoc.WorkbookPart.Workbook.Sheets;
+                Sheet  sheet  = sheets.Elements<Sheet>().Where(s => s.Name == "請求書2").FirstOrDefault();
+                if (null != sheet)
+                {
+                    WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDoc.WorkbookPart.GetPartById(sheet.Id);
+                    Worksheet     worksheet     = worksheetPart.Worksheet;
+                    Cell          cell          = worksheet.Descendants<Cell>().Where(c => c.CellReference == cellReference).FirstOrDefault();
+                    if (null != cell)
+                    {
+                        string text = cell.InnerText;
+                        switch (cell.DataType.Value)
+                        {
+                            case CellValues.SharedString:
+                                int index = int.Parse(cell.InnerText);
+                                SharedStringTablePart ssTablePart = spreadsheetDoc.WorkbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+                                text = ssTablePart.SharedStringTable.ElementAt(index).InnerText;
+                                break;
+ 
+                            case CellValues.Boolean:
+                                if ("0" == cell.InnerText)
+                                    text = "FALSE";
+                                else
+                                    text = "TRUE";
+                                break;
+                        }
+                        System.Console.WriteLine(text);
+                    }
+                }
+            }
+
             // ブック(book)の追加
             // var spreadsheetDocument = SpreadsheetDocument.
             //     Create(filepath, SpreadsheetDocumentType.Workbook);
