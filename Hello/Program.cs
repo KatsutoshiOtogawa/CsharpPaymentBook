@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,9 @@ namespace Hello
     {
         static void Main(string[] args)
         {
-            String filepath = @"data.xlsx";
+
+            var excel_data = Environment.GetEnvironmentVariable("EXCEL_DATA");
+            var filepath = Path.Combine(excel_data,@"data.xlsx");
  
             // ブック(book)の追加
             var spreadsheetDocument = SpreadsheetDocument.
