@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
- 
+
+using IO;
+
 namespace Hello
 {
     class Program
@@ -15,53 +17,51 @@ namespace Hello
         static void Main(string[] args)
         {
 
-            var excel_data = Environment.GetEnvironmentVariable("EXCEL_DATA");
-            var filepath = Path.Combine(excel_data,@"data.xlsx");
-
-            var tmpfileName = Path.GetTempFileName();
+            Class1.CreateSpreadSheetFromTemplate(@"tf10378474_win32.xltx",@"tf10378474_win32.xlsx");
 
             // ブック(book)の追加
-            var spreadsheetDocument = SpreadsheetDocument.
-                Create(filepath, SpreadsheetDocumentType.Workbook);
+            // var spreadsheetDocument = SpreadsheetDocument.
+            //     Create(filepath, SpreadsheetDocumentType.Workbook);
  
-            var workbookpart = spreadsheetDocument.AddWorkbookPart();
-            workbookpart.Workbook = new Workbook();
+            // var workbookpart = spreadsheetDocument.AddWorkbookPart();
+            // workbookpart.Workbook = new Workbook();
  
-            var worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
-            worksheetPart.Worksheet = new Worksheet(new SheetData());
+            // var worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+            // worksheetPart.Worksheet = new Worksheet(new SheetData());
  
-            // シート(sheet)の追加
-            var sheets = spreadsheetDocument.WorkbookPart.Workbook.
-                AppendChild<Sheets>(new Sheets());
+            // // シート(sheet)の追加
+            // var sheets = spreadsheetDocument.WorkbookPart.Workbook.
+            //     AppendChild<Sheets>(new Sheets());
  
-            var sheet = new Sheet()
-            {
-                Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                SheetId = 1,
-                Name = "mySheet"
-            };
-            sheets.Append(sheet);
+            // var sheet = new Sheet()
+            // {
+            //     Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+            //     SheetId = 1,
+            //     Name = "mySheet"
+            // };
+            // sheets.Append(sheet);
  
-            // 行(row)の追加
-            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-            var row = new Row() { RowIndex = 1 };
-            sheetData.Append(row);
+            // // 行(row)の追加
+            // var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            // var row = new Row() { RowIndex = 1 };
+            // sheetData.Append(row);
  
-            // セル(cell)の追加
-            Cell refCell = null;
-            var newCell = new Cell()
-            {
-                CellReference = "A1",
-                DataType = CellValues.String,
-                CellValue = new CellValue("Hello, Excel")
-            };
-            row.InsertBefore(newCell, refCell);
+            // // セル(cell)の追加
+            // Cell refCell = null;
+            // var newCell = new Cell()
+            // {
+            //     CellReference = "A1",
+            //     DataType = CellValues.String,
+            //     CellValue = new CellValue("Hello, Excel")
+            // };
+            // row.InsertBefore(newCell, refCell);
  
-            // ブックの保存
-            workbookpart.Workbook.Save();
+            // // ブックの保存
+            // workbookpart.Workbook.Save();
  
-            // Close the document.
-            spreadsheetDocument.Close();
+            // // Close the document.
+            // spreadsheetDocument.Close();
         }
+
     }
 }
