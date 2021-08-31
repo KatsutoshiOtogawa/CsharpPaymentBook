@@ -17,7 +17,9 @@ namespace Hello
 
             var excel_data = Environment.GetEnvironmentVariable("EXCEL_DATA");
             var filepath = Path.Combine(excel_data,@"data.xlsx");
- 
+
+            var tmpfileName = Path.GetTempFileName();
+
             // ブック(book)の追加
             var spreadsheetDocument = SpreadsheetDocument.
                 Create(filepath, SpreadsheetDocumentType.Workbook);
